@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 type Task = {
   id: number;
   text: string;
@@ -15,6 +17,24 @@ export const TaskList: React.FC<TaskListProps> = ({
   onChangeTask,
   onDeleteTask,
 }) => {
+  const [editTaskId, setEditTaskId] = useState<number | null>(null);
+  const [editText, setEditText] = useState<string>('');
+
+  const handleEdit = (task: Task) => {
+    setEditTaskId(task.id);
+    setEditText(task.text);
+  };
+
+  const handleSave = (id: number) => {
+    const updatedTask = {
+      id,
+      text: editText,
+      done: tasks.find((task) => task.id === id)?.done || false,
+    };
+    onChangeTask(updatedTask);
+    setEditTaskId(null);
+  };
+
   return (
     <ul>
       {tasks.map((task) => (
@@ -22,9 +42,23 @@ export const TaskList: React.FC<TaskListProps> = ({
           <input
             type="checkbox"
             checked={task.done}
-            onChange={() => onChangeTask(task)}
+            onChange={() => onChangeTask({ ...task, done: !task.done })}
           />
-          {task.text}
+          {editTaskId === task.id ? (
+            <>
+              <input
+                type="text"
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
+              />
+              <button onClick={() => handleSave(task.id)}>Save</button>
+            </>
+          ) : (
+            <>
+              {task.text}
+              <button onClick={() => handleEdit(task)}>Edit</button>
+            </>
+          )}
           <button onClick={() => onDeleteTask(task.id)}>Delete</button>
         </li>
       ))}

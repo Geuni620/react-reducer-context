@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useReducer } from 'react';
 import { AddTask } from 'src/components/AddTask';
 import { TaskList } from 'src/components/TaskList';
+import { tasksReducer } from 'src/utils/tasksReducer';
 
 type Task = {
   id: number;
@@ -16,34 +17,38 @@ const initialTasks = [
 ];
 
 export const App = () => {
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  // const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const [tasks, dispatch] = useReducer(tasksReducer, initialTasks);
 
   const handleAddTask = (text: string) => {
-    setTasks([
-      ...tasks,
+    dispatch(
+      // action 객체
       {
+        type: 'added',
         id: nextId++,
         text: text,
-        done: false,
       },
-    ]);
+    );
   };
 
   const handleChangeTask = (task: Task) => {
-    setTasks(
-      tasks.map((t) =>
-        t.id === task.id
-          ? {
-              ...t,
-              done: !t.done,
-            }
-          : t,
-      ),
+    dispatch(
+      // action 객체
+      {
+        type: 'changed',
+        task: task,
+      },
     );
   };
 
   const handleDeleteTask = (taskId: number) => {
-    setTasks(tasks.filter((t) => t.id !== taskId));
+    dispatch(
+      // action 객체
+      {
+        type: 'deleted',
+        id: taskId,
+      },
+    );
   };
 
   return (
