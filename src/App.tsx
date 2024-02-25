@@ -1,9 +1,27 @@
-import { Button } from 'src/components/ui/button';
+import { Heading } from 'src/components/heading';
+import { Section } from 'src/components/section';
 
 export const App = () => {
   return (
-    <div className="absolute left-10 top-0">
-      <Button>Click me</Button>
-    </div>
+    <main className="mx-auto w-[500px]">
+      <Section>
+        <Heading level={1}>Title</Heading>
+        <Section>
+          <Heading level={2}>Heading</Heading>
+          <Heading level={2}>Heading</Heading>
+          <Heading level={2}>Heading</Heading>
+          <Section>
+            <Heading level={3}>Sub-heading</Heading>
+            <Heading level={3}>Sub-heading</Heading>
+            <Heading level={3}>Sub-heading</Heading>
+            <Section>
+              <Heading level={4}>Sub-sub-heading</Heading>
+              <Heading level={4}>Sub-sub-heading</Heading>
+              <Heading level={4}>Sub-sub-heading</Heading>
+            </Section>
+          </Section>
+        </Section>
+      </Section>
+    </main>
   );
 };
