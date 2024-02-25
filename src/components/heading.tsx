@@ -1,9 +1,14 @@
+import { useContext } from 'react';
+import { LevelContext } from 'src/components/level-context';
+
 type HeadingProps = {
-  level: 1 | 2 | 3 | 4 | 5 | 6;
   children: React.ReactNode;
 };
 
-export const Heading = ({ level, children }: HeadingProps) => {
+export const Heading = ({ children }: HeadingProps) => {
+  const level = useContext(LevelContext);
+  console.log('level', level);
+
   switch (level) {
     case 1:
       return <h1>{children}</h1>;
