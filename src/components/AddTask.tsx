@@ -1,18 +1,21 @@
-import { useRef } from 'react';
+import { useContext, useRef } from 'react';
+import { TasksDispatchContext } from 'src/context/tasks-content';
 
-type AddTaskProps = {
-  onAddTask: (text: string) => void;
-};
-
-export const AddTask: React.FC<AddTaskProps> = ({ onAddTask }) => {
+export const AddTask: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const dispatch = useContext(TasksDispatchContext);
+  if (!dispatch) return;
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     const text = inputRef.current?.value;
     if (text) {
-      onAddTask(text);
+      dispatch({
+        type: 'added',
+        id: Math.floor(Math.random() * 1000),
+        text,
+      });
       inputRef.current.value = '';
     }
   };

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { TasksContext, TasksDispatchContext } from 'src/context/tasks-content';
 
 type Task = {
   id: number;
@@ -6,19 +7,12 @@ type Task = {
   done: boolean;
 };
 
-type TaskListProps = {
-  tasks: Task[];
-  onChangeTask: (task: Task) => void;
-  onDeleteTask: (taskId: number) => void;
-};
-
-export const TaskList: React.FC<TaskListProps> = ({
-  tasks,
-  onChangeTask,
-  onDeleteTask,
-}) => {
+export const TaskList: React.FC = () => {
+  const tasks = useContext(TasksContext);
+  const dispatch = useContext(TasksDispatchContext);
   const [editTaskId, setEditTaskId] = useState<number | null>(null);
   const [editText, setEditText] = useState<string>('');
+  if (!dispatch) return null;
 
   const handleEdit = (task: Task) => {
     setEditTaskId(task.id);
@@ -31,7 +25,10 @@ export const TaskList: React.FC<TaskListProps> = ({
       text: editText,
       done: tasks.find((task) => task.id === id)?.done || false,
     };
-    onChangeTask(updatedTask);
+    dispatch({
+      type: 'changed',
+      task: updatedTask,
+    });
     setEditTaskId(null);
   };
 
@@ -42,7 +39,12 @@ export const TaskList: React.FC<TaskListProps> = ({
           <input
             type="checkbox"
             checked={task.done}
-            onChange={() => onChangeTask({ ...task, done: !task.done })}
+            onChange={() =>
+              dispatch({
+                type: 'changed',
+                task: { ...task, done: !task.done },
+              })
+            }
           />
           {editTaskId === task.id ? (
             <>
@@ -59,7 +61,16 @@ export const TaskList: React.FC<TaskListProps> = ({
               <button onClick={() => handleEdit(task)}>Edit</button>
             </>
           )}
-          <button onClick={() => onDeleteTask(task.id)}>Delete</button>
+          <button
+            onClick={() =>
+              dispatch({
+                type: 'deleted',
+                id: task.id,
+              })
+            }
+          >
+            Delete
+          </button>
         </li>
       ))}
     </ul>
