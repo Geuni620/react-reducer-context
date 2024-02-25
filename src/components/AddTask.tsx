@@ -1,9 +1,10 @@
-import { useContext, useRef } from 'react';
-import { TasksDispatchContext } from 'src/context/tasks-content';
+import { useRef } from 'react';
+
+import { useTasksDispatch } from '@/hooks/useTasksDispatch';
 
 export const AddTask: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const dispatch = useContext(TasksDispatchContext);
+  const dispatch = useTasksDispatch();
   if (!dispatch) return;
 
   const onSubmit = (e: React.FormEvent) => {

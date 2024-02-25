@@ -1,5 +1,7 @@
-import { useContext, useState } from 'react';
-import { TasksContext, TasksDispatchContext } from 'src/context/tasks-content';
+import { useState } from 'react';
+
+import { useTasks } from '@/hooks/useTasks';
+import { useTasksDispatch } from '@/hooks/useTasksDispatch';
 
 type Task = {
   id: number;
@@ -8,8 +10,9 @@ type Task = {
 };
 
 export const TaskList: React.FC = () => {
-  const tasks = useContext(TasksContext);
-  const dispatch = useContext(TasksDispatchContext);
+  const tasks = useTasks();
+  const dispatch = useTasksDispatch();
+
   const [editTaskId, setEditTaskId] = useState<number | null>(null);
   const [editText, setEditText] = useState<string>('');
   if (!dispatch) return null;
